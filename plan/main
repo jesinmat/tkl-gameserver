@@ -2,6 +2,7 @@
 
 mailutils
 bzip2
+binutils
 bc
 jq
 tmux
