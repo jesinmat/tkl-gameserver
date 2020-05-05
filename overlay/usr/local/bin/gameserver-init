@@ -1,0 +1,39 @@
+#!/bin/bash
+
+GAMEUSER="gameuser"
+
+function create_game_user {
+    if ! getent passwd "$GAMEUSER" > /dev/null 2>&1; then
+        useradd -m -s /bin/bash "$GAMEUSER"
+        # Generate random password
+        PASS="$GAMEUSER"
+        echo "$GAMEUSER:$PASS" | chpasswd
+    fi
+}
+
+function clone_or_update_gameservers {
+    git clone "https://github.com/jesinmat/linux-gameservers.git" /root/gameservers
+}
+
+create_game_user
+
+if [ ! -d "/etc/gameserver" ] || [ ! -f "/etc/gameserver/gameserver" ]; then
+    mkdir -p "/etc/gameserver"
+    clone_or_update_gameservers
+    python3 "/usr/local/bin/gameserver-menu.py" "/root/gameservers/games"
+    echo "GAMEUSER=$GAMEUSER" >> /etc/gameserver/gameserver
+fi
+
+if [ ! -f "/etc/gameserver/installation.done" ]; then
+    . /etc/gameserver/gameserver
+
+    # TODO clone or update games repo
+
+    cd "/root/gameservers"
+    chmod +x "/root/gameservers/auto_install.sh"
+    bash "./auto_install.sh" "$GAME"
+    
+    touch "/etc/gameserver/installation.done"
+fi
+
+/usr/local/bin/gameserver-start

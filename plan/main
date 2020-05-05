@@ -1,0 +1,8 @@
+#include <turnkey/base>
+
+mailutils
+bzip2
+bc
+jq
+tmux
+netcat

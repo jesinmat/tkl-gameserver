@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ ! -d "/etc/gameserver" ] || [ ! -f "/etc/gameserver/gameserver" ]; then
+    echo "Gameserver config directory not found." >&2
+    exit 1
+fi
+
+. /etc/gameserver/gameserver
+
+# Start the server
+runuser -l "gameuser" -c "~/${GAME}server start"
