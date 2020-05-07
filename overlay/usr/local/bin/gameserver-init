@@ -21,7 +21,8 @@ if [ ! -d "/etc/gameserver" ] || [ ! -f "/etc/gameserver/gameserver" ]; then
     mkdir -p "/etc/gameserver"
     clone_or_update_gameservers
     python3 "/usr/local/bin/gameserver-menu.py" "/root/gameservers/"
-    echo "GAMEUSER=$GAMEUSER" >> /etc/gameserver/gameserver
+    . /etc/gameserver/gameserver
+    echo 'Game:      $ipaddr' >> /etc/confconsole/services.txt
 fi
 
 if [ ! -f "/etc/gameserver/installation.done" ]; then
