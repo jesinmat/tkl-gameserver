@@ -8,4 +8,4 @@ fi
 . /etc/gameserver/gameserver
 
 # Start the server
-runuser -l "gameuser" -c "~/${GAME}server start"
+runuser -l "gameuser" -c "~/gameserver/${GAME}server start"

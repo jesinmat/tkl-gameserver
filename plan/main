@@ -7,3 +7,4 @@ bc
 jq
 tmux
 netcat
+sudo

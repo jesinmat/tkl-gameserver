@@ -12,7 +12,12 @@ function create_game_user {
 }
 
 function clone_or_update_gameservers {
-    git clone "https://github.com/jesinmat/linux-gameservers.git" /root/gameservers
+    if [ -d "/root/gameservers" ]; then
+        cd "/root/gameservers"
+        git pull
+    else
+        git clone "https://github.com/jesinmat/linux-gameservers.git" /root/gameservers
+    fi
 }
 
 create_game_user
@@ -21,18 +26,15 @@ if [ ! -d "/etc/gameserver" ] || [ ! -f "/etc/gameserver/gameserver" ]; then
     mkdir -p "/etc/gameserver"
     clone_or_update_gameservers
     python3 "/usr/local/bin/gameserver-menu.py" "/root/gameservers/"
-    . /etc/gameserver/gameserver
     echo 'Game:      $ipaddr' >> /etc/confconsole/services.txt
 fi
 
 if [ ! -f "/etc/gameserver/installation.done" ]; then
     . /etc/gameserver/gameserver
 
-    # TODO clone or update games repo
-
     cd "/root/gameservers"
-    chmod +x "/root/gameservers/auto_install.sh"
-    bash "./auto_install.sh" "$GAME"
+    chmod +x "auto_install.sh"
+    bash "./auto_install.sh" -g "$GAME" -u "$GAMEUSER" -p "/home/$GAMEUSER/gameserver"
     
     touch "/etc/gameserver/installation.done"
 fi
