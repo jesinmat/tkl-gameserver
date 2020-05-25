@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 GAMEUSER="gameuser"
 GAME=
@@ -27,7 +27,7 @@ function select_game_interactive {
 }
 
 function select_game_auto {
-    cp "/root/gameservers/games/$1/game_properties.sh" "/etc/gameserver/gameserver"
+    cp "/root/gameservers/games/$GAME/game_properties.sh" "/etc/gameserver/gameserver"
 }
 
 create_game_user
