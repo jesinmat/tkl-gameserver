@@ -1,6 +1,8 @@
 #!/bin/bash
 
 GAMEUSER="gameuser"
+GAME=
+[ -n "$1" ] && GAME="$1"
 
 function create_game_user {
     if ! getent passwd "$GAMEUSER" > /dev/null 2>&1; then
@@ -20,12 +22,26 @@ function clone_or_update_gameservers {
     fi
 }
 
+function select_game_interactive {
+    python3 "/usr/local/bin/gameserver-menu.py" "/root/gameservers/"
+}
+
+function select_game_auto {
+    cp "/root/gameservers/games/$1/game_properties.sh" "/etc/gameserver/gameserver"
+}
+
 create_game_user
 
 if [ ! -d "/etc/gameserver" ] || [ ! -f "/etc/gameserver/gameserver" ]; then
     mkdir -p "/etc/gameserver"
     clone_or_update_gameservers
-    python3 "/usr/local/bin/gameserver-menu.py" "/root/gameservers/"
+
+    if [ -n "$GAME" ]; then
+        select_game_auto
+    else
+        select_game_interactive
+    fi
+    
     echo 'Game:      $ipaddr' >> /etc/confconsole/services.txt
 fi
 

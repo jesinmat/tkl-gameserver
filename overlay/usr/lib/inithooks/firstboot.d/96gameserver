@@ -1,2 +1,8 @@
-#!/bin/bash
-/usr/local/bin/gameserver-init
+#!/bin/bash -e
+# select and start game server
+
+. /etc/default/inithooks
+
+[ -e $INITHOOKS_CONF ] && . $INITHOOKS_CONF
+
+/usr/local/bin/gameserver-init "$GAME"
