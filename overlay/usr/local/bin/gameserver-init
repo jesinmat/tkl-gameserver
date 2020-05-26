@@ -53,6 +53,9 @@ if [ ! -f "/etc/gameserver/installation.done" ]; then
     bash "./auto_install.sh" -g "$GAME" -u "$GAMEUSER" -p "/home/$GAMEUSER/gameserver"
     
     touch "/etc/gameserver/installation.done"
+
+    # Enable server start on boot
+    update-rc.d gameserver defaults
 fi
 
 /usr/local/bin/gameserver-start
