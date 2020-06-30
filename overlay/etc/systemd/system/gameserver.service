@@ -1,0 +1,13 @@
+[Unit]
+Description=Run selected GameServer
+Requires=Network.target
+After=Network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/gameserver-start
+ExecStop=/usr/local/bin/gameserver-stop
+
+[Install]
+WantedBy=multi-user.target

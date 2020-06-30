@@ -55,7 +55,6 @@ if [ ! -f "/etc/gameserver/installation.done" ]; then
     touch "/etc/gameserver/installation.done"
 
     # Enable server start on boot
-    update-rc.d gameserver defaults
     systemctl enable gameserver
 fi
 
