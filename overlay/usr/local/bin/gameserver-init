@@ -55,7 +55,7 @@ if [ ! -f "/etc/gameserver/installation.done" ]; then
 
     cd "/root/gameservers"
     chmod +x "auto_install.sh"
-    . "./auto_install.sh" -g "$GAME" -u "$GAMEUSER" -p "/home/$GAMEUSER/gameserver"
+    bash "./auto_install.sh" -g "$GAME" -u "$GAMEUSER" -p "/home/$GAMEUSER/gameserver"
     
     touch "/etc/gameserver/installation.done"
 
