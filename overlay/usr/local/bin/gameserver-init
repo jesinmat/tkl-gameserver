@@ -47,7 +47,9 @@ if [ ! -d "/etc/gameserver" ] || [ ! -f "/etc/gameserver/gameserver" ]; then
         select_game_interactive
     fi
     
-    echo 'Game:      $ipaddr' >> /etc/confconsole/services.txt
+    echo 'Game:       $ipaddr' | cat - /etc/confconsole/services.txt > temp_confconsole
+    mv temp_confconsole /etc/confconsole/services.txt
+    rm temp_confconsole
 fi
 
 if [ ! -f "/etc/gameserver/installation.done" ]; then
