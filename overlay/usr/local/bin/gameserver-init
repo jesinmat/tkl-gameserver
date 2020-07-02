@@ -1,8 +1,6 @@
 #!/bin/bash -e
 
 GAMEUSER="gameuser"
-GAME=
-[ -n "$1" ] && GAME="$1"
 
 function create_game_user {
     if ! getent passwd "$GAMEUSER" > /dev/null 2>&1; then
@@ -18,7 +16,14 @@ function clone_or_update_gameservers {
         cd "/root/gameservers"
         git pull
     else
-        git clone "https://github.com/jesinmat/linux-gameservers.git" /root/gameservers
+        if [ -z "$GAME_REPO_URL" ]; then
+            GAME_REPO_URL="https://github.com/jesinmat/linux-gameservers.git"
+        fi
+        if [ -n "$GAME_REPO_BRANCH" ]; then
+            git clone --single-branch --branch "$GAME_REPO_BRANCH" "$GAME_REPO_URL" "/root/gameservers"
+        else
+            git clone "$GAME_REPO_URL" "/root/gameservers"
+        fi
     fi
 }
 
@@ -50,7 +55,7 @@ if [ ! -f "/etc/gameserver/installation.done" ]; then
 
     cd "/root/gameservers"
     chmod +x "auto_install.sh"
-    bash "./auto_install.sh" -g "$GAME" -u "$GAMEUSER" -p "/home/$GAMEUSER/gameserver"
+    . "./auto_install.sh" -g "$GAME" -u "$GAMEUSER" -p "/home/$GAMEUSER/gameserver"
     
     touch "/etc/gameserver/installation.done"
 

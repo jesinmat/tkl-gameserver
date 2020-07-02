@@ -5,4 +5,4 @@
 
 [ -e $INITHOOKS_CONF ] && . $INITHOOKS_CONF
 
-/usr/local/bin/gameserver-init "$GAME"
+. /usr/local/bin/gameserver-init
