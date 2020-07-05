@@ -1,29 +1,29 @@
-TurnKey GameServer Appliance
+GameServer - Host your own game server
 =======================================================
 
-TODO
+GameServer is a `TurnKey GNU/Linux`_ appliance for hosting
+game servers on Linux. It provides a way of deploying game servers
+in minutes in cloud environments.
+
+This appliance includes all the standard features in `TurnKey Core`_,
+and on top of that:
+
+- Managing game servers using `Linux Gameservers`_:
+    - Downloads newest version during first boot to ensure best possible game support
+    - Wrapper for `LinuxGSM`_ with support for up to 100 games
+
+- Fully automatic or interactive game server selection:
+    - All required settings can be passed via user data, game server starts within minutes
+    - If no data is provided, graphical interface will prompt user to select required game server
 
 Credentials *(passwords set at first boot)*
 -------------------------------------------
 
 -  Webmin, SSH, Shellinabox: username **root**
+-  Game server: username **gameuser**
+    - If you need to log in as this user, connect as root and switch users 
 
-.. _free software: https://www.turnkeylinux.org/license
-.. _full source code: https://github.com/turnkeylinux-apps
-.. _powerful build system: https://www.turnkeylinux.org/tkldev
-.. _system alerts: https://www.turnkeylinux.org/docs/automatic-security-alerts
-.. _screenshots: https://www.turnkeylinux.org/screenshots/148
-.. _headless build types: https://www.turnkeylinux.org/docs/builds#builds-table
-.. _ISO images: https://www.turnkeylinux.org/docs/builds#iso
-.. _Virtual Machine images: https://www.turnkeylinux.org/docs/builds#vm
-.. _TurnKey Hub: https://hub.turnkeylinux.org
-.. _AMI codes: https://www.turnkeylinux.org/docs/ec2/ami
-.. _TKLBAM: https://www.turnkeylinux.org/tklbam
-.. _Auto-updated daily: https://www.turnkeylinux.org/docs/automatic-security-updates
-.. _HubDNS: https://www.turnkeylinux.org/dns
-.. _LVM: https://tldp.org/HOWTO/LVM-HOWTO/
-.. _shellinabox: https://github.com/shellinabox/shellinabox
-.. _confconsole: https://www.turnkeylinux.org/docs/confconsole#main-screen-and-basic-functionality
-.. _Webmin: https://webmin.com/
-.. _inithooks: https://github.com/turnkeylinux/inithooks
-.. _shell hooks: https://www.turnkeylinux.org/blog/generic-shell-hooks
+.. _TurnKey GNU/Linux: https://www.turnkeylinux.org/
+.. _TurnKey Core: https://www.turnkeylinux.org/core
+.. _Linux Gameservers: https://github.com/jesinmat/linux-gameservers
+.. _LinuxGSM: https://linuxgsm.com/
