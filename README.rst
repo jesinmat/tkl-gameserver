@@ -20,8 +20,7 @@ Credentials *(passwords set at first boot)*
 -------------------------------------------
 
 -  Webmin, SSH, Shellinabox: username **root**
--  Game server: username **gameuser**
-    - If you need to log in as this user, connect as root and switch users 
+-  Game server: username **gameuser** (if you need to log in as this user, connect as root and switch users)
 
 .. _TurnKey GNU/Linux: https://www.turnkeylinux.org/
 .. _TurnKey Core: https://www.turnkeylinux.org/core
