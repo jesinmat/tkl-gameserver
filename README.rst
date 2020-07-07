@@ -16,6 +16,31 @@ and on top of that:
     - All required settings can be passed via user data, game server starts within minutes
     - If no data is provided, graphical interface will prompt user to select required game server
 
+Headless installation
+---------------------
+
+User data can be passed to the image before the first boot. Cloud service providers offer ways to run
+scripts before launching the instance, enabling the user to set the environment.
+You can use `supported environment variables`_ from Linux Gameservers to initialize your game server without
+user interaction.
+
+Below is a sample init script::
+
+    #!/bin/bash
+
+    cat>/etc/inithooks.conf<<EOF
+    export ROOT_PASS=YourSecretRootPassword
+    export DB_PASS=YourSecretMysqlPassword
+    export APP_PASS=YourSecretWebappPassword
+    export APP_EMAIL=admin@example.com
+    export HUB_APIKEY=SKIP
+    export SEC_UPDATES=FORCE
+
+    export GAME="mc"
+    export GAME_SERVER_NAME="My first game server"
+    EOF
+
+
 Credentials *(passwords set at first boot)*
 -------------------------------------------
 
@@ -26,3 +51,4 @@ Credentials *(passwords set at first boot)*
 .. _TurnKey Core: https://www.turnkeylinux.org/core
 .. _Linux Gameservers: https://github.com/jesinmat/linux-gameservers
 .. _LinuxGSM: https://linuxgsm.com/
+.. _supported environment variables: https://github.com/jesinmat/linux-gameservers#supported-games
