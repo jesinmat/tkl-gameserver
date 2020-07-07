@@ -24,10 +24,8 @@ scripts before launching the instance, enabling the user to set the environment.
 You can use `supported environment variables`_ from Linux Gameservers to initialize your game server without
 user interaction.
 
-Below is a sample init script.
+Below is a sample init script::
 
-.. code-block:: console
-    :linenos:
     #!/bin/bash
 
     cat>/etc/inithooks.conf<<EOF
@@ -41,6 +39,7 @@ Below is a sample init script.
     export GAME="mc"
     export GAME_SERVER_NAME="My first game server"
     EOF
+
 
 Credentials *(passwords set at first boot)*
 -------------------------------------------
