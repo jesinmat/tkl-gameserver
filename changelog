@@ -8,4 +8,4 @@ turnkey-gameserver-16.0 (1) turnkey; urgency=low
     - https://github.com/jesinmat/linux-gameservers
     - Support for both fully automatic and interactive game server selection.
 
--- Matyáš Ješina <jesinmat@fit.cvut.cz>  Sun, 05 Jul 2020 18:44:24 +1000
+ -- Matyas Jesina <jesinmat@fit.cvut.cz>  Sun, 05 Jul 2020 18:44:24 +1000
