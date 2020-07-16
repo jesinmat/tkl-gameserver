@@ -1,6 +1,7 @@
 #!/bin/bash -e
 
 GAMEUSER="gameuser"
+LOGFILE="/var/log/gameserver/install.log"
 
 function create_game_user {
     if ! getent passwd "$GAMEUSER" > /dev/null 2>&1; then
@@ -39,7 +40,7 @@ function select_game_auto {
 function select_game {
     if [ ! -d "/etc/gameserver" ] || [ ! -f "/etc/gameserver/gameserver" ]; then
         mkdir -p "/etc/gameserver"
-        clone_or_update_gameservers
+        clone_or_update_gameservers >> "$LOGFILE"
 
         if [ -n "$GAME" ]; then
             select_game_auto
@@ -71,7 +72,7 @@ function install_game {
 function install {
     create_game_user
     select_game
-    install_game | tee /var/log/gameserver/install.log
+    install_game | tee -a "$LOGFILE"
 }
 
 install
