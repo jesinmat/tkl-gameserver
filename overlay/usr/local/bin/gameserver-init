@@ -38,6 +38,8 @@ function select_game_auto {
 
 create_game_user
 
+{
+
 if [ ! -d "/etc/gameserver" ] || [ ! -f "/etc/gameserver/gameserver" ]; then
     mkdir -p "/etc/gameserver"
     clone_or_update_gameservers
@@ -57,7 +59,7 @@ if [ ! -f "/etc/gameserver/installation.done" ]; then
 
     cd "/root/gameservers"
     chmod +x "auto_install.sh"
-    bash "./auto_install.sh" -g "$GAME" -u "$GAMEUSER" -p "/home/$GAMEUSER/gameserver" | tee /var/log/gameserver/install.log
+    bash "./auto_install.sh" -g "$GAME" -u "$GAMEUSER" -p "/home/$GAMEUSER/gameserver"
     
     touch "/etc/gameserver/installation.done"
 
@@ -66,3 +68,5 @@ if [ ! -f "/etc/gameserver/installation.done" ]; then
 fi
 
 systemctl start gameserver
+
+} | tee /var/log/gameserver/install.log
