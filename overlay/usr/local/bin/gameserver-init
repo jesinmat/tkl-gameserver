@@ -40,7 +40,7 @@ function select_game_auto {
 function select_game {
     if [ ! -d "/etc/gameserver" ] || [ ! -f "/etc/gameserver/gameserver" ]; then
         mkdir -p "/etc/gameserver"
-        clone_or_update_gameservers >> "$LOGFILE"
+        clone_or_update_gameservers 2>> "$LOGFILE"
 
         if [ -n "$GAME" ]; then
             select_game_auto
@@ -72,7 +72,7 @@ function install_game {
 function install {
     create_game_user
     select_game
-    install_game | tee -a "$LOGFILE"
+    install_game 2>&1 | tee -a "$LOGFILE"
 }
 
 install
