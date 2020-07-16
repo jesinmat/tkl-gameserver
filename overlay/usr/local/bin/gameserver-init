@@ -38,8 +38,6 @@ function select_game_auto {
 
 create_game_user
 
-{
-
 if [ ! -d "/etc/gameserver" ] || [ ! -f "/etc/gameserver/gameserver" ]; then
     mkdir -p "/etc/gameserver"
     clone_or_update_gameservers
@@ -53,6 +51,8 @@ if [ ! -d "/etc/gameserver" ] || [ ! -f "/etc/gameserver/gameserver" ]; then
     echo 'GameServer: $ipaddr' | cat - /etc/confconsole/services.txt > temp_confconsole
     mv temp_confconsole /etc/confconsole/services.txt
 fi
+
+{
 
 if [ ! -f "/etc/gameserver/installation.done" ]; then
     . /etc/gameserver/gameserver
