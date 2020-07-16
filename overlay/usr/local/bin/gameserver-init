@@ -5,6 +5,9 @@ GAMEUSER="gameuser"
 function create_game_user {
     if ! getent passwd "$GAMEUSER" > /dev/null 2>&1; then
         useradd -m -s /bin/bash "$GAMEUSER"
+        
+        . /etc/default/inithooks
+        [ -e $INITHOOKS_CONF ] && . $INITHOOKS_CONF
         $INITHOOKS_PATH/bin/setpass.py $GAMEUSER --pass="$APP_PASS"       
     fi
 }
