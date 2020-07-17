@@ -22,7 +22,7 @@ Headless installation
 User data can be passed to the image before the first boot. Cloud service providers offer ways to run
 scripts before launching the instance, enabling the user to set the environment.
 You can use `supported environment variables`_ from Linux Gameservers to initialize your game server without
-user interaction.
+user interaction. Password for the **gameuser** account can be set through the *APP_PASS* variable.
 
 Below is a sample init script::
 
@@ -31,7 +31,7 @@ Below is a sample init script::
     cat>/etc/inithooks.conf<<EOF
     export ROOT_PASS=YourSecretRootPassword
     export DB_PASS=YourSecretMysqlPassword
-    export APP_PASS=YourSecretWebappPassword
+    export APP_PASS=YourSecretWebappAndGameuserPassword
     export APP_EMAIL=admin@example.com
     export HUB_APIKEY=SKIP
     export SEC_UPDATES=FORCE
@@ -45,7 +45,7 @@ Credentials *(passwords set at first boot)*
 -------------------------------------------
 
 -  Webmin, SSH, Shellinabox: username **root**
--  Game server: username **gameuser** (if you need to log in as this user, connect as root and switch users)
+-  Game server: username **gameuser**
 
 .. _TurnKey GNU/Linux: https://www.turnkeylinux.org/
 .. _TurnKey Core: https://www.turnkeylinux.org/core
