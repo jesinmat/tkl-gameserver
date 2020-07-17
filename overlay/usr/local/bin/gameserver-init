@@ -45,6 +45,8 @@ function select_game {
         if [ -n "$GAME" ]; then
             select_game_auto
         else
+            # Exit if not running interactively, game will be selected on first login
+            [[ $- != *i* ]] && exit 0
             select_game_interactive
         fi
         
