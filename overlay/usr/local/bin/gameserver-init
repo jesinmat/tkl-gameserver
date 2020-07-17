@@ -1,14 +1,16 @@
 #!/bin/bash -e
 
 GAMEUSER="gameuser"
+LOGFILE="/var/log/gameserver/install.log"
 
 function create_game_user {
     if ! getent passwd "$GAMEUSER" > /dev/null 2>&1; then
-        useradd -m -s /bin/bash "$GAMEUSER"
-        # Generate random password
-        PASS="$GAMEUSER"
-        echo "$GAMEUSER:$PASS" | chpasswd
+        useradd -m -s /bin/bash "$GAMEUSER"  
     fi
+    
+    . /etc/default/inithooks
+    [ -e $INITHOOKS_CONF ] && . $INITHOOKS_CONF
+    $INITHOOKS_PATH/bin/setpass.py $GAMEUSER --pass="$APP_PASS"
 }
 
 function clone_or_update_gameservers {
@@ -35,33 +37,44 @@ function select_game_auto {
     cp "/root/gameservers/games/$GAME/game_properties.sh" "/etc/gameserver/gameserver"
 }
 
-create_game_user
+function select_game {
+    if [ ! -d "/etc/gameserver" ] || [ ! -f "/etc/gameserver/gameserver" ]; then
+        mkdir -p "/etc/gameserver"
+        clone_or_update_gameservers 2>> "$LOGFILE"
 
-if [ ! -d "/etc/gameserver" ] || [ ! -f "/etc/gameserver/gameserver" ]; then
-    mkdir -p "/etc/gameserver"
-    clone_or_update_gameservers
-
-    if [ -n "$GAME" ]; then
-        select_game_auto
-    else
-        select_game_interactive
+        if [ -n "$GAME" ]; then
+            select_game_auto
+        else
+            # Exit if not running interactively, game will be selected on first login
+            [ -z "`stty size`" ] && exit 0
+            select_game_interactive
+        fi
+        
+        echo 'GameServer: $ipaddr' | cat - /etc/confconsole/services.txt > temp_confconsole
+        mv temp_confconsole /etc/confconsole/services.txt
     fi
-    
-    echo 'GameServer: $ipaddr' | cat - /etc/confconsole/services.txt > temp_confconsole
-    mv temp_confconsole /etc/confconsole/services.txt
-fi
+}
 
-if [ ! -f "/etc/gameserver/installation.done" ]; then
-    . /etc/gameserver/gameserver
+function install_game {
+    if [ ! -f "/etc/gameserver/installation.done" ]; then
+        . /etc/gameserver/gameserver
 
-    cd "/root/gameservers"
-    chmod +x "auto_install.sh"
-    bash "./auto_install.sh" -g "$GAME" -u "$GAMEUSER" -p "/home/$GAMEUSER/gameserver"
-    
-    touch "/etc/gameserver/installation.done"
+        cd "/root/gameservers"
+        chmod +x "auto_install.sh"
+        bash "./auto_install.sh" -g "$GAME" -u "$GAMEUSER" -p "/home/$GAMEUSER/gameserver"
+        
+        touch "/etc/gameserver/installation.done"
 
-    # Enable server start on boot
-    systemctl enable gameserver
-fi
+        # Enable server start on boot
+        systemctl enable gameserver
+    fi
+    systemctl start gameserver
+}
 
-systemctl start gameserver
+function install {
+    create_game_user
+    select_game
+    install_game 2>&1 | tee -a "$LOGFILE"
+}
+
+install

@@ -6,4 +6,4 @@
 [ -e $INITHOOKS_CONF ] && . $INITHOOKS_CONF
 
 mkdir -p /var/log/gameserver
-/usr/local/bin/gameserver-init | tee /var/log/gameserver/install.log
+/usr/local/bin/gameserver-init
