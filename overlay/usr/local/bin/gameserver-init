@@ -9,7 +9,7 @@ function create_game_user {
     fi
     
     . /etc/default/inithooks
-    [ -e $INITHOOKS_CONF ] && . $INITHOOKS_CONF
+    # [ -e $INITHOOKS_CONF ] && . $INITHOOKS_CONF
     $INITHOOKS_PATH/bin/setpass.py $GAMEUSER --pass="$APP_PASS"
 }
 
