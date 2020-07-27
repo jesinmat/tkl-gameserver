@@ -16,8 +16,25 @@ and on top of that:
     - All required settings can be passed via user data, game server starts within minutes
     - If no data is provided, graphical interface will prompt user to select required game server
 
-Headless installation
----------------------
+Usage
+-----
+
+Interactive installation
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+When running this appliance with an interactive output (such as in a virtual machine),
+you will be guided through the game server installation using a graphical interface.
+
+During the installation, you will be asked to provide basic server settings for the game server.
+
+Manual headless installation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you're launching this appliance in a cloud environment without providing user data (see next chapter for details),
+you will need to log into the server using SSH and start a game server installation either in the Configuration Console menu (`confconsole`) or by using the `gameserver-init` command. A graphical interface will guide you through the installation.
+
+Automatic headless installation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 User data can be passed to the image before the first boot. Cloud service providers offer ways to run
 scripts before launching the instance, enabling the user to set the environment.
@@ -37,7 +54,7 @@ Below is a sample init script::
     export SEC_UPDATES=FORCE
 
     export GAME="mc"
-    export GAME_SERVER_NAME="My first game server"
+    export GAME_SERVER_NAME="My first Minecraft game server"
     EOF
 
 
