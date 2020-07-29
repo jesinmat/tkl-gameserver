@@ -59,6 +59,11 @@ Below is a sample init script::
 
 In case you don't specify the ``GAME`` variable, you can choose a game server later by logging into the appliance and following the guide in `Manual headless installation`_.
 
+Logs
+^^^^
+
+Game server installation logs are stored in ``/var/log/gameserver/install.log``.
+
 Credentials *(passwords set at first boot)*
 -------------------------------------------
 
