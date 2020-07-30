@@ -63,6 +63,7 @@ Logs
 ^^^^
 
 Game server installation logs are stored in ``/var/log/gameserver/install.log``.
+Other game server logs, as well as the server itself, are stored in ``/home/gameuser/gameserver/``.
 
 Credentials *(passwords set at first boot)*
 -------------------------------------------
