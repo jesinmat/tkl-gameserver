@@ -2,6 +2,7 @@
 
 GAMEUSER="gameuser"
 LOGFILE="/var/log/gameserver/install.log"
+GAME_REPO_DIR="/root/gameservers"
 
 function create_game_user {
     if ! getent passwd "$GAMEUSER" > /dev/null 2>&1; then
@@ -9,32 +10,31 @@ function create_game_user {
     fi
     
     . /etc/default/inithooks
-    # [ -e $INITHOOKS_CONF ] && . $INITHOOKS_CONF
     $INITHOOKS_PATH/bin/setpass.py $GAMEUSER --pass="$APP_PASS"
 }
 
 function clone_or_update_gameservers {
-    if [ -d "/root/gameservers" ]; then
-        cd "/root/gameservers"
+    if [ -d "$GAME_REPO_DIR" ]; then
+        cd "$GAME_REPO_DIR"
         git pull
     else
         if [ -z "$GAME_REPO_URL" ]; then
             GAME_REPO_URL="https://github.com/jesinmat/linux-gameservers.git"
         fi
         if [ -n "$GAME_REPO_BRANCH" ]; then
-            git clone --single-branch --branch "$GAME_REPO_BRANCH" "$GAME_REPO_URL" "/root/gameservers"
+            git clone --single-branch --branch "$GAME_REPO_BRANCH" "$GAME_REPO_URL" "$GAME_REPO_DIR"
         else
-            git clone "$GAME_REPO_URL" "/root/gameservers"
+            git clone "$GAME_REPO_URL" "$GAME_REPO_DIR"
         fi
     fi
 }
 
 function select_game_interactive {
-    python3 "/usr/local/bin/gameserver-menu.py" "/root/gameservers/"
+    python3 "/usr/local/bin/gameserver-menu.py" "$GAME_REPO_DIR"
 }
 
 function select_game_auto {
-    cp "/root/gameservers/games/$GAME/game_properties.sh" "/etc/gameserver/gameserver"
+    cp "$GAME_REPO_DIR/games/$GAME/game_properties.sh" "/etc/gameserver/gameserver"
 }
 
 function select_game {
@@ -59,7 +59,7 @@ function install_game {
     if [ ! -f "/etc/gameserver/installation.done" ]; then
         . /etc/gameserver/gameserver
 
-        cd "/root/gameservers"
+        cd "$GAME_REPO_DIR"
         chmod +x "auto_install.sh"
         bash "./auto_install.sh" -g "$GAME" -u "$GAMEUSER" -p "/home/$GAMEUSER/gameserver"
         
