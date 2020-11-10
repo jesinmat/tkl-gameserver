@@ -51,7 +51,7 @@ function install_game {
 }
 
 function install {
-    create_game_user
+    setup_game_user
     select_game
     install_game 2>&1 | tee -a "$LOGFILE"
 }
