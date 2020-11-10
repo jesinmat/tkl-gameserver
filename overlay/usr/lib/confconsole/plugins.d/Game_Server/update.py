@@ -25,17 +25,19 @@ def is_update_available():
     return ('ok', local_head != remote_head)
 
 def run():
+    curdir = os.getcwd()
+    os.chdir(GAME_REPO_DIR)
+
     ok, data = is_update_available()
     if ok == 'error':
         console.msgbox('Error',
                 'An error occured checking for updates:\n',
                 data)
+        os.chdir(curdir)
         return
 
     if data:
         console.infobox('Updates found, performing updates...')
-        curdir = os.getcwd()
-        os.chdir(GAME_REPO_DIR)
         ret = subprocess.run(['git', 'pull'], capture_output=True, text=True) 
 
         if ret.returncode != 0:
@@ -46,5 +48,6 @@ def run():
             console.msgbox('Update success')
     else:
         console.msgbox('Updates', 'No updates found')
+    os.chdir(curdir)
 
 
