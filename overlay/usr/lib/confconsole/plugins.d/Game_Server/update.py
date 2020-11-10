@@ -45,7 +45,7 @@ def run():
                     'An error occured during update:\n',
                     ret.stderr)
         else:
-            console.msgbox('Update success')
+            console.msgbox('Update', 'Update success')
     else:
         console.msgbox('Updates', 'No updates found')
     os.chdir(curdir)
