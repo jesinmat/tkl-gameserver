@@ -4,29 +4,9 @@ GAMEUSER="gameuser"
 LOGFILE="/var/log/gameserver/install.log"
 GAME_REPO_DIR="/root/gameservers"
 
-function create_game_user {
-    if ! getent passwd "$GAMEUSER" > /dev/null 2>&1; then
-        useradd -m -s /bin/bash "$GAMEUSER"  
-    fi
-    
+function setup_game_user {
     . /etc/default/inithooks
     $INITHOOKS_PATH/bin/setpass.py $GAMEUSER --pass="$APP_PASS"
-}
-
-function clone_or_update_gameservers {
-    if [ -d "$GAME_REPO_DIR" ]; then
-        cd "$GAME_REPO_DIR"
-        git pull
-    else
-        if [ -z "$GAME_REPO_URL" ]; then
-            GAME_REPO_URL="https://github.com/jesinmat/linux-gameservers.git"
-        fi
-        if [ -n "$GAME_REPO_BRANCH" ]; then
-            git clone --single-branch --branch "$GAME_REPO_BRANCH" "$GAME_REPO_URL" "$GAME_REPO_DIR"
-        else
-            git clone "$GAME_REPO_URL" "$GAME_REPO_DIR"
-        fi
-    fi
 }
 
 function select_game_interactive {
@@ -40,7 +20,6 @@ function select_game_auto {
 function select_game {
     if [ ! -d "/etc/gameserver" ] || [ ! -f "/etc/gameserver/gameserver" ]; then
         mkdir -p "/etc/gameserver"
-        clone_or_update_gameservers 2>> "$LOGFILE"
 
         if [ -n "$GAME" ]; then
             select_game_auto
