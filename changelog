@@ -1,3 +1,12 @@
+turnkey-gameserver-16.1 (1) turnkey; urgency=low
+
+  * Rebuild with latest available components for v16.1.
+
+  * Note: Please refer to turnkey-core's 16.1 changelog for changes common to
+    all appliances. Here we only describe changes specific to this appliance.
+
+ -- Jeremy Davis <jeremy@turnkeylinux.org>  Mon, 12 Apr 2021 15:52:00 +1000
+
 turnkey-gameserver-16.0 (1) turnkey; urgency=low
 
   * First release, please refer to TurnKey Core changelog for more info
