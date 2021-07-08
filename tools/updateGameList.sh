@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# run as root
+
 rootDir="/home/gameuser/gameserver/"
 gamesList="$rootDir/lgsm/data/serverlist.csv"
 
