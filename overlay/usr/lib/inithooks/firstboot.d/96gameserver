@@ -5,9 +5,12 @@
 
 [ -e $INITHOOKS_CONF ] && . $INITHOOKS_CONF
 
-# if sec updates set, then we must be running non-interactively
-# so we should set default values
-if [[ -n "$SEC_UPDATES" ]]; then
+GAMEUSER=${GAMEUSER:-gameuser}
+$INITHOOKS_PATH/bin/setpass.py $GAMEUSER --pass="$APP_PASS"
+
+# if sec updates set (or turnkey-init-fence is active), then we must be running
+# non-interactively so we should set default values
+if [[ -n "$SEC_UPDATES" ]] || systemctl -q is-active turnkey-init-fence ; then
     APP_GAMESERVER_REPO="${APP_GAMESERVER_REPO:-https://github.com/jesinmat/linux-gameservers.git}"
     APP_GAMESERVER_BRANCH="${APP_GAMESERVER_BRANCH:-master}"
 fi
