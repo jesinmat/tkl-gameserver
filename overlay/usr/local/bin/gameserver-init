@@ -4,15 +4,17 @@ GAMEUSER="gameuser"
 LOGFILE="/var/log/gameserver/install.log"
 GAME_REPO_DIR="/root/gameservers"
 
-function select_game_interactive {
+fatal() { echo "FATAL: $@"; exit 1; }
+
+select_game_interactive() {
     python3 "/usr/local/bin/gameserver-menu.py" "$GAME_REPO_DIR"
 }
 
-function select_game_auto {
+select_game_auto() {
     cp "$GAME_REPO_DIR/games/$GAME/game_properties.sh" "/etc/gameserver/gameserver"
 }
 
-function select_game {
+select_game() {
     if [ ! -d "/etc/gameserver" ] || [ ! -f "/etc/gameserver/gameserver" ]; then
         mkdir -p "/etc/gameserver"
 
@@ -30,9 +32,11 @@ function select_game {
     fi
 }
 
-function install_game {
+install_game() {
     if [ ! -f "/etc/gameserver/installation.done" ]; then
-        . /etc/gameserver/gameserver
+        conf=/etc/gameserver/gameserver
+        [[ -f "$conf" ]] || fatal "Conf file ($conf) not found."
+        . $conf
 
         cd "$GAME_REPO_DIR"
         chmod +x "auto_install.sh"
@@ -46,9 +50,5 @@ function install_game {
     systemctl start gameserver
 }
 
-function install {
-    select_game
-    install_game 2>&1 | tee -a "$LOGFILE"
-}
-
-install
+select_game
+install_game 2>&1 | tee -a "$LOGFILE"
