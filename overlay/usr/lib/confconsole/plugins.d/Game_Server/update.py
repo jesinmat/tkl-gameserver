@@ -49,5 +49,3 @@ def run():
     else:
         console.msgbox('Updates', 'No updates found')
     os.chdir(curdir)
-
-
