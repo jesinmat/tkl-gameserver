@@ -18,5 +18,4 @@ if [[ -n "$SEC_UPDATES" ]] || systemctl -q is-active turnkey-init-fence ; then
 fi
 $INITHOOKS_PATH/bin/gameserver.py --gameserver-repo="$APP_GAMESERVER_REPO" --gameserver-branch="$APP_GAMESERVER_BRANCH"
 
-mkdir -p /var/log/gameserver
 [[ -n "$skip_init" ]] || /usr/local/bin/gameserver-init

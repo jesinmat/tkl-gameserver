@@ -7,3 +7,5 @@ GAME_REPO_URL="https://github.com/jesinmat/linux-gameservers.git"
 useradd -m -s /bin/bash "$GAMEUSER"
 
 git clone --depth=1 "$GAME_REPO_URL" "$GAME_REPO_DIR"
+
+mkdir -p /var/log/gameserver
