@@ -4,20 +4,27 @@ GAMEUSER="gameuser"
 LOGFILE="/var/log/gameserver/install.log"
 GAME_REPO_DIR="/root/gameservers"
 
-function setup_game_user {
-    . /etc/default/inithooks
-    $INITHOOKS_PATH/bin/setpass.py $GAMEUSER --pass="$APP_PASS"
+fatal() { echo "FATAL: $@"; exit 1; }
+
+clean_finish() {
+    sed -i "\|^$GAMEUSER| s|^|#|" /etc/sudoers
+    if [[ $1 -ne 0 ]]; then
+        echo
+        fatal "Install was interrupted and/or failed."
+    else
+        echo "Installation complete."
+    fi
 }
 
-function select_game_interactive {
+select_game_interactive() {
     python3 "/usr/local/bin/gameserver-menu.py" "$GAME_REPO_DIR"
 }
 
-function select_game_auto {
+select_game_auto() {
     cp "$GAME_REPO_DIR/games/$GAME/game_properties.sh" "/etc/gameserver/gameserver"
 }
 
-function select_game {
+select_game() {
     if [ ! -d "/etc/gameserver" ] || [ ! -f "/etc/gameserver/gameserver" ]; then
         mkdir -p "/etc/gameserver"
 
@@ -25,35 +32,38 @@ function select_game {
             select_game_auto
         else
             # Exit if not running interactively, game will be selected on first login
-            [ -z "`stty size`" ] && exit 0
+            [[ -n $(stty size) ]] || exit 0
             select_game_interactive
         fi
-        
         echo 'GameServer: $ipaddr' | cat - /etc/confconsole/services.txt > temp_confconsole
         mv temp_confconsole /etc/confconsole/services.txt
     fi
 }
 
-function install_game {
+install_game() {
     if [ ! -f "/etc/gameserver/installation.done" ]; then
-        . /etc/gameserver/gameserver
+        conf=/etc/gameserver/gameserver
+        [[ -f "$conf" ]] || fatal "Conf file ($conf) not found."
+        . $conf
 
+        unset exit_code
         cd "$GAME_REPO_DIR"
         chmod +x "auto_install.sh"
-        bash "./auto_install.sh" -g "$GAME" -u "$GAMEUSER" -p "/home/$GAMEUSER/gameserver"
-        
-        touch "/etc/gameserver/installation.done"
-
+        bash "./auto_install.sh" -g "$GAME" -u "$GAMEUSER" -p "/home/$GAMEUSER/gameserver" \
+            || exit_code=$?
+        if [[ -z exit_code ]]; then
+            touch "/etc/gameserver/installation.done"
+        else
+            fatal "Install failed. Please check previous logs for details."
+        fi
         # Enable server start on boot
         systemctl enable gameserver
     fi
     systemctl start gameserver
 }
 
-function install {
-    setup_game_user
-    select_game
-    install_game 2>&1 | tee -a "$LOGFILE"
-}
-
-install
+trap "clean_finish 1" INT TERM ERR
+sed -i "\|$GAMEUSER| s|^\s*#||" /etc/sudoers
+select_game
+install_game 2>&1 | tee -a "$LOGFILE"
+clean_finish 0

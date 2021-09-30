@@ -1,5 +1,9 @@
 #!/bin/bash -e
 # Stop running game server
 
-. /etc/gameserver/gameserver
+fatal() { echo "FATAL: $@"; exit 1; }
+
+conf=/etc/gameserver/gameserver
+[[ -f "$conf" ]] || fatal "Conf file ($conf) not found."
+. $conf
 runuser -l "gameuser" -c "~/gameserver/${GAME}server stop"
