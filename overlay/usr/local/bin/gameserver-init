@@ -32,7 +32,6 @@ select_game() {
             select_game_auto
         else
             # Exit if not running interactively, game will be selected on first login
-            echo $(stty size) >> /root/tty.size
             [[ -n $(stty size) ]] || exit 0
             select_game_interactive
         fi
