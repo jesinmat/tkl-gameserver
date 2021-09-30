@@ -4,7 +4,30 @@ GAMEUSER="gameuser"
 GAME_REPO_DIR="/root/gameservers"
 GAME_REPO_URL="https://github.com/jesinmat/linux-gameservers.git"
 
+# Add i386 arch (common for lots of games) and install lib32gcc1
+dpkg --add-architecture i386
+dir=/etc/apt/sources.list.d
+for list in $dir/sources.list $dir/security.sources.list; do
+    sed -i "\|turnkeylinux.org| s|\[|\[arch=amd64, |" $list
+done
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install -y lib32gcc1
+
+# Create GAMEUSER as (limited) sudo user (initially commented out - running
+# gameserver-init will enable it; then disable it afterwards).
 useradd -m -s /bin/bash "$GAMEUSER"
+match="# Cmnd alias specification"
+line1="Cmnd_Alias APT_GET = /usr/bin/apt-get"
+line2="Cmnd_Alias TRUE = /usr/bin/true"
+line3="#$GAMEUSER ALL=(ALL) NOPASSWD: APT_GET, TRUE"
+for line in "$line1" "$line2"; do
+    sed -i "\|$match| a $line" /etc/sudoers
+done
+echo >> /etc/sudoers
+echo "$line3" >> /etc/sudoers
+
+# disable SSH login for GAMEUSER
+echo "DenyUsers	$GAMEUSER" >> /etc/ssh/sshd_config
 
 git clone --depth=1 "$GAME_REPO_URL" "$GAME_REPO_DIR"
 
