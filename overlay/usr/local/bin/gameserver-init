@@ -4,16 +4,22 @@ GAMEUSER="gameuser"
 LOGFILE="/var/log/gameserver/install.log"
 GAME_REPO_DIR="/root/gameservers"
 
-fatal() { echo "FATAL: $@"; exit 1; }
-
-clean_finish() {
+clean_exit() {
+    exit_code=$1
+    shift
     sed -i "\|^$GAMEUSER| s|^|#|" /etc/sudoers
-    if [[ $1 -ne 0 ]]; then
+    if [[ $exit_code -ne 0 ]]; then
+        rm -f /etc/gameserver/gameserver
         echo
-        fatal "Install was interrupted and/or failed."
+        if [[ $# -gt 0 ]]; then
+            echo "FATAL: $@"
+        else
+            echo "FATAL: Install was interrupted and/or failed."
+        fi
     else
         echo "Installation complete."
     fi
+    exit $exit_code
 }
 
 select_game_interactive() {
@@ -29,11 +35,11 @@ select_game() {
         mkdir -p "/etc/gameserver"
 
         if [ -n "$GAME" ]; then
-            select_game_auto
+            select_game_auto || clean_exit 1 "Game $GAME install failed, please check spelling."
         else
             # Exit if not running interactively, game will be selected on first login
-            [[ -n $(stty size) ]] || exit 0
-            select_game_interactive
+            [[ -n $(stty size) ]] || clean_exit 0 "Detected non-interactive run (& GAME not set); skipping install."
+            select_game_interactive || clean_exit 1 "No game selected."
         fi
         echo 'GameServer: $ipaddr' | cat - /etc/confconsole/services.txt > temp_confconsole
         mv temp_confconsole /etc/confconsole/services.txt
@@ -43,18 +49,20 @@ select_game() {
 install_game() {
     if [ ! -f "/etc/gameserver/installation.done" ]; then
         conf=/etc/gameserver/gameserver
-        [[ -f "$conf" ]] || fatal "Conf file ($conf) not found."
-        . $conf
-
-        unset exit_code
+        if [[ ! -f "$conf" ]]; then
+            clean_exit 1 "Conf file ($conf) not found."
+        else
+            . $conf
+        fi
+        exit_code=0
         cd "$GAME_REPO_DIR"
         chmod +x "auto_install.sh"
-        bash "./auto_install.sh" -g "$GAME" -u "$GAMEUSER" -p "/home/$GAMEUSER/gameserver" \
+        ./auto_install.sh -g "$GAME" -u "$GAMEUSER" -p "/home/$GAMEUSER/gameserver" \
             || exit_code=$?
-        if [[ -z exit_code ]]; then
+        if [[ $exit_code -eq 0 ]]; then
             touch "/etc/gameserver/installation.done"
         else
-            fatal "Install failed. Please check previous logs for details."
+            clean_exit 1 "Install failed. Please check previous logs for details."
         fi
         # Enable server start on boot
         systemctl enable gameserver
@@ -62,8 +70,9 @@ install_game() {
     systemctl start gameserver
 }
 
-trap "clean_finish 1" INT TERM ERR
+install_exit_code=0
+trap 'clean_exit $?' INT TERM ERR
 sed -i "\|$GAMEUSER| s|^\s*#||" /etc/sudoers
 select_game
-install_game 2>&1 | tee -a "$LOGFILE"
-clean_finish 0
+install_game 2>&1 | tee -a "$LOGFILE" || install_exit_code=$?
+clean_exit $install_exit_code
