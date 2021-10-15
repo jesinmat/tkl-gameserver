@@ -41,8 +41,6 @@ select_game() {
             [[ -n $(stty size) ]] || clean_exit 0 "Detected non-interactive run (& GAME not set); skipping install."
             select_game_interactive || clean_exit 1 "No game selected."
         fi
-        echo 'GameServer: $ipaddr' | cat - /etc/confconsole/services.txt > temp_confconsole
-        mv temp_confconsole /etc/confconsole/services.txt
     fi
 }
 
