@@ -47,11 +47,8 @@ select_game() {
 install_game() {
     if [ ! -f "/etc/gameserver/installation.done" ]; then
         conf=/etc/gameserver/gameserver
-        if [[ ! -f "$conf" ]]; then
-            clean_exit 1 "Conf file ($conf) not found."
-        else
-            . $conf
-        fi
+        [[ -f "$conf" ]] || clean_exit 1 "Conf file ($conf) not found."
+        . $conf
         exit_code=0
         cd "$GAME_REPO_DIR"
         chmod +x "auto_install.sh"
