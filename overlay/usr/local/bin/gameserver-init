@@ -55,7 +55,10 @@ install_game() {
         exit_code=0
         cd "$GAME_REPO_DIR"
         chmod +x "auto_install.sh"
-        ./auto_install.sh -g "$GAME" -u "$GAMEUSER" -p "/home/$GAMEUSER/gameserver" \
+        # ensure non-zero exit on failure - explicit 'e' can be removed
+        # if/when https://github.com/jesinmat/linux-gameservers/pull/11 is
+        # merged
+        bash -e ./auto_install.sh -g "$GAME" -u "$GAMEUSER" -p "/home/$GAMEUSER/gameserver" \
             || exit_code=$?
         if [[ $exit_code -eq 0 ]]; then
             touch "/etc/gameserver/installation.done"
