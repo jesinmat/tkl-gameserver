@@ -11,6 +11,13 @@ using a graphical interface.
 During the installation, you will be asked to provide basic server settings for
 the game server.
 
+If for some reason the install is interupted or fails, but reports success;
+please remove /etc/gameserver/installation.done and retry. I.e.::
+
+   rm /etc/gameserver/installation.done
+   gameserver-init
+
+
 Manual headless installation
 ----------------------------
 
