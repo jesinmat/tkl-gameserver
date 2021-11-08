@@ -1,6 +1,6 @@
 turnkey-gameserver-16.2 (1) turnkey; urgency=low
 
-  * Bugifx inithooks - closes #1652.
+  * Bugfix inithooks - closes #1652.
 
  -- Jeremy Davis <jeremy@turnkeylinux.org>  Thu, 30 Sep 2021 13:48:56 +1000
 
