@@ -58,6 +58,45 @@ In case you don't specify the ``GAME`` variable, you can choose a game server
 later by logging into the appliance and following the guide in `Manual headless
 installation`_.
 
+Update gameserver list
+----------------------------
+
+There are two methods to update the gameserver list, through the Configuration Console or updating the repo from the CLI.
+
+Method 1:
+^^^^^^^^^^^
+
+#. SSH into the appliance and run the command ``confconsole``.
+
+#. Select ``Advanced`` menu or press the ``A`` key.
+
+#. Select ``Gameserver`` or press the ``G`` key.
+
+#. Select ``Update`` or press the ``U`` key.
+
+#. Done!
+
+Method 2:
+^^^^^^^^^^^
+
+#. SSH into the appliance and stop the service::
+
+    ~# systemctl stop gameserver
+
+#. Change to gameservers directory::
+
+    ~# cd /root/gameservers/
+
+#. Pull down the latest from the git repo::
+
+    ~/gameservers# git pull origin master
+
+#. Start the gameserver service::
+
+    ~/gameservers# systemctl start gameserver
+    
+Done!
+
 Logs
 ----
 
